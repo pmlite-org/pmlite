@@ -1,0 +1,16 @@
+{
+  "name": "pmlite",
+  "version": "1.0.0",
+  "description": "PMLite monorepo project",
+  "private": true,
+  "scripts": {
+    "dev:frontend": "pnpm --filter frontend dev",
+    "dev:backend": "pnpm --filter backend start:dev",
+    "build": "pnpm -r build",
+    "test": "pnpm -r test",
+    "lint": "pnpm -r lint"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
