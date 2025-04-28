@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import Grid from "../../components/tasks/TasksGrid";
+import Grid from '../../features/tasks/components/organisms/TasksGrid';
 
 export default function Page() {
   return (

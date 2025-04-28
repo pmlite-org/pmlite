@@ -1,11 +1,11 @@
-import { useState, useEffect, useRef } from "react";
-import apiClient from "../../repositories/apis";
-import { TaskData } from "../../types/taskData";
-import { CellChange, ChangeSource } from "handsontable/common";
-import { HotTableRef } from "@handsontable/react-wrapper";
-import { schemas } from "@pmlite/shared/dist/api-types/apis";
-import { z } from "zod";
-import { convertDateToDateStr } from "../../utils/dateUtils";
+import { useState, useEffect, useRef } from 'react';
+import apiClient from '../../../../infrastructure/apis';
+import { TaskData } from '../../types/taskData';
+import { CellChange, ChangeSource } from 'handsontable/common';
+import { HotTableRef } from '@handsontable/react-wrapper';
+import { schemas } from '@pmlite/shared/dist/api-types/apis';
+import { z } from 'zod';
+import { convertDateToDateStr } from '../../../../shared/utils/dateUtils';
 
 type TaskModel = z.infer<typeof schemas.TaskModel>;
 
@@ -15,10 +15,10 @@ const handleApiError = (error: any) => {
     console.error(`Error: ${error.response.status} - ${error.response.data}`);
   } else if (error.request) {
     // リクエストが送信されたが、応答がない場合
-    console.error("No response received:", error.request);
+    console.error('No response received:', error.request);
   } else {
     // その他のエラー
-    console.error("Error:", error.message);
+    console.error('Error:', error.message);
   }
   return false;
 };
@@ -42,7 +42,7 @@ export const useGrid = () => {
           });
           setTasks(displayTasks);
         })
-        .catch((error) => {
+        .catch(error => {
           handleApiError(error);
         });
     };
@@ -55,15 +55,11 @@ export const useGrid = () => {
       tasksRef.current.hotInstance.countRows() === 0
         ? 0
         : tasksRef.current.hotInstance.countRows() - 1;
-    tasksRef.current.hotInstance.alter("insert_row_below", index, 1, "addTask");
+    tasksRef.current.hotInstance.alter('insert_row_below', index, 1, 'addTask');
   };
 
-  const onRowCreate = (
-    index: number,
-    amount: number,
-    source?: ChangeSource
-  ): boolean => {
-    console.log("onRowCreate");
+  const onRowCreate = (index: number, amount: number, source?: ChangeSource): boolean => {
+    console.log('onRowCreate');
     console.log(index, amount, source);
     const newTasks: TaskModel[] = Array.from({ length: amount }, (_, i) => {
       const rowNumber =
@@ -74,29 +70,24 @@ export const useGrid = () => {
       };
     });
     (apiClient.bulkUpsertTasks({ tasks: newTasks }) as Promise<TaskModel[]>)
-      .then((createdTasks) => {
+      .then(createdTasks => {
         createdTasks.forEach((task: TaskModel) => {
+          tasksRef.current?.hotInstance?.setDataAtRowProp(task.rank, 'uuid', task.uuid, 'addTask');
           tasksRef.current?.hotInstance?.setDataAtRowProp(
             task.rank,
-            "uuid",
-            task.uuid,
-            "addTask"
-          );
-          tasksRef.current?.hotInstance?.setDataAtRowProp(
-            task.rank,
-            "createdAt",
+            'createdAt',
             task.createdAt,
-            "addTask"
+            'addTask'
           );
           tasksRef.current?.hotInstance?.setDataAtRowProp(
             task.rank,
-            "updatedAt",
+            'updatedAt',
             task.updatedAt,
-            "addTask"
+            'addTask'
           );
         });
       })
-      .catch((error) => {
+      .catch(error => {
         handleApiError(error);
       });
     return true;
@@ -110,21 +101,19 @@ export const useGrid = () => {
   ) => {
     const uuids = Array.from({ length: amount }, (_, i) =>
       tasksRef.current?.hotInstance?.getDataAtCell(index + i, 0)
-    ).filter((uuid) => uuid);
-    (apiClient.bulkDeleteTasks(uuids as string[]) as Promise<void>).catch(
-      (error) => {
-        handleApiError(error);
-      }
-    );
+    ).filter(uuid => uuid);
+    (apiClient.bulkDeleteTasks(uuids as string[]) as Promise<void>).catch(error => {
+      handleApiError(error);
+    });
     return true;
   };
 
   const onCellChange = (
     changes: Array<CellChange | null>,
-    source: ChangeSource | "addTask"
+    source: ChangeSource | 'addTask'
   ): boolean => {
-    console.log("onCellChange");
-    if (source === "addTask") return true;
+    console.log('onCellChange');
+    if (source === 'addTask') return true;
     if (!changes) return true;
 
     const updatedTasks: TaskModel[] = changes
@@ -134,14 +123,14 @@ export const useGrid = () => {
           return null;
         }
         let reqValue = newValue;
-        if (prop === "actualPersonDay" || prop === "plannedPersonDay") {
+        if (prop === 'actualPersonDay' || prop === 'plannedPersonDay') {
           reqValue = Number(newValue);
         }
         if (
-          prop === "plannedStartDate" ||
-          prop === "plannedEndDate" ||
-          prop === "actualStartDate" ||
-          prop === "actualEndDate"
+          prop === 'plannedStartDate' ||
+          prop === 'plannedEndDate' ||
+          prop === 'actualStartDate' ||
+          prop === 'actualEndDate'
         ) {
           const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
           if (newValue && dateRegex.test(newValue)) {
@@ -160,7 +149,7 @@ export const useGrid = () => {
         if (task === null) return false;
         const result = schemas.TaskModel.safeParse(task);
         if (!result.success) {
-          console.log("Validation error:", result.error);
+          console.log('Validation error:', result.error);
           return false;
         }
         return true;
@@ -168,17 +157,11 @@ export const useGrid = () => {
 
     if (updatedTasks.length === 0) return true;
 
-    (
-      apiClient.bulkUpsertTasks({ tasks: updatedTasks }) as Promise<TaskModel[]>
-    ).catch((error) => {
+    (apiClient.bulkUpsertTasks({ tasks: updatedTasks }) as Promise<TaskModel[]>).catch(error => {
       handleApiError(error);
     });
     return true;
   };
 
-  return [
-    initialTasks,
-    tasksRef,
-    { addTask, onRowCreate, onRowDelete, onCellChange },
-  ] as const;
+  return [initialTasks, tasksRef, { addTask, onRowCreate, onRowDelete, onCellChange }] as const;
 };
