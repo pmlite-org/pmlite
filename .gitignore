@@ -31,3 +31,9 @@ pnpm-debug.log*
 
 # Testing
 coverage
+
+# DB
+db_data
+
+# typescript
+tsconfig.tsbuildinfo

@@ -1,21 +1,34 @@
 {
   "name": "pmlite",
   "version": "1.0.0",
-  "description": "PMLite monorepo project",
   "private": true,
   "scripts": {
-    "dev:frontend": "pnpm --filter frontend dev",
+    "dev:frontend": "pnpm --filter frontend start:dev",
     "dev:backend": "pnpm --filter backend start:dev",
     "build": "pnpm -r build",
     "test": "pnpm -r test",
     "lint": "pnpm -r lint",
     "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,css,scss,md}\"",
-    "format:check": "prettier --check \"**/*.{js,jsx,ts,tsx,json,css,scss,md}\""
+    "format:check": "prettier --check \"**/*.{js,jsx,ts,tsx,json,css,scss,md}\"",
+    "openapi": "openapi-zod-client http://localhost:3001/api-json -o ./packages/shared/src/api-types/apis.ts -a"
   },
-  "keywords": [],
   "author": "",
-  "license": "ISC",
+  "keywords": [],
   "devDependencies": {
-    "prettier": "^3.2.5"
+    "@eslint/js": "^9.17.0",
+    "eslint": "^9.17.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-import": "^2.31.0",
+    "eslint-plugin-only-warn": "^1.1.0",
+    "eslint-plugin-unused-imports": "^4.1.4",
+    "globals": "^15.14.0",
+    "openapi-zod-client": "^1.18.2",
+    "typescript": "^5.7.2",
+    "typescript-eslint": "^8.18.2"
+  },
+  "dependencies": {
+    "@zodios/core": "^10.9.6",
+    "axios": "^1.7.9",
+    "zod": "^3.24.1"
   }
 }
