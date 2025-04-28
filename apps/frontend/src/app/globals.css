@@ -1,0 +1,9 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.ht_clone_top,
+.ht_clone_top_inline_start_corner,
+.ht_clone_inline_start {
+  z-index: 25 !important;
+}
