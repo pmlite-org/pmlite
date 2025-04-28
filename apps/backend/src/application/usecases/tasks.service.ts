@@ -1,9 +1,9 @@
-import { Injectable } from "@nestjs/common";
-import { Mapper } from "@automapper/core";
-import { InjectMapper } from "@automapper/nestjs";
-import { TaskEntity } from "../entities/task.entity";
-import { TasksRepositoryImpl } from "../repositories/tasks.repository";
-import { TaskModel } from "../models/task.model";
+import { Injectable } from '@nestjs/common';
+import { Mapper } from '@automapper/core';
+import { InjectMapper } from '@automapper/nestjs';
+import { TaskEntity } from '../../domain/entities/task.entity';
+import { TasksRepositoryImpl } from '../../infrastructure/repositories/tasks.repository';
+import { TaskModel } from '../../presentation/models/task.model';
 
 @Injectable()
 export class TasksService {
@@ -19,20 +19,10 @@ export class TasksService {
 
   async bulkUpsert(taskModels: TaskModel[]): Promise<TaskModel[]> {
     console.log(taskModels);
-    const taskEntities = this.mapper.mapArray(
-      taskModels,
-      TaskModel,
-      TaskEntity
-    );
-    const taskEntitiesUpserted = await this.taskRepository.bulkUpsert(
-      taskEntities
-    );
+    const taskEntities = this.mapper.mapArray(taskModels, TaskModel, TaskEntity);
+    const taskEntitiesUpserted = await this.taskRepository.bulkUpsert(taskEntities);
     console.log(taskEntitiesUpserted);
-    const taskModelsUpserted = this.mapper.mapArray(
-      taskEntitiesUpserted,
-      TaskEntity,
-      TaskModel
-    );
+    const taskModelsUpserted = this.mapper.mapArray(taskEntitiesUpserted, TaskEntity, TaskModel);
     console.log(taskModelsUpserted);
     return taskModelsUpserted;
   }

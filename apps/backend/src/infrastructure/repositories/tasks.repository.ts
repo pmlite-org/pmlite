@@ -1,8 +1,8 @@
-import { Injectable } from "@nestjs/common";
-import { InjectRepository } from "@nestjs/typeorm";
-import { EntityManager, Repository } from "typeorm";
+import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { EntityManager, Repository } from 'typeorm';
 
-import { TaskEntity } from "../entities/task.entity";
+import { TaskEntity } from '../../domain/entities/task.entity';
 
 @Injectable()
 export class TasksRepositoryImpl {
@@ -11,23 +11,17 @@ export class TasksRepositoryImpl {
     private readonly taskRepository: Repository<TaskEntity>
   ) {}
 
-  async create(
-    entity: TaskEntity,
-    manager?: EntityManager
-  ): Promise<TaskEntity> {
+  async create(entity: TaskEntity, manager?: EntityManager): Promise<TaskEntity> {
     return manager
       ? manager.getRepository(TaskEntity).save(entity)
       : this.taskRepository.save(entity);
   }
 
   async find(): Promise<TaskEntity[]> {
-    return this.taskRepository.find({ order: { rank: "ASC" } });
+    return this.taskRepository.find({ order: { rank: 'ASC' } });
   }
 
-  async bulkUpsert(
-    entities: TaskEntity[],
-    manager?: EntityManager
-  ): Promise<TaskEntity[]> {
+  async bulkUpsert(entities: TaskEntity[], manager?: EntityManager): Promise<TaskEntity[]> {
     return manager
       ? manager.getRepository(TaskEntity).save(entities)
       : this.taskRepository.save(entities);

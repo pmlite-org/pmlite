@@ -1,14 +1,8 @@
-import { Injectable } from "@nestjs/common";
-import { AutomapperProfile, InjectMapper } from "@automapper/nestjs";
-import {
-  createMap,
-  forMember,
-  mapFrom,
-  Mapper,
-  MappingProfile,
-} from "@automapper/core";
-import { TaskEntity } from "../entities/task.entity";
-import { TaskModel } from "../models/task.model";
+import { Injectable } from '@nestjs/common';
+import { AutomapperProfile, InjectMapper } from '@automapper/nestjs';
+import { createMap, forMember, mapFrom, Mapper, MappingProfile } from '@automapper/core';
+import { TaskEntity } from '../domain/entities/task.entity';
+import { TaskModel } from '../presentation/models/task.model';
 
 @Injectable()
 export class MapperProfile extends AutomapperProfile {
@@ -17,18 +11,18 @@ export class MapperProfile extends AutomapperProfile {
   }
 
   get profile(): MappingProfile {
-    return (mapper) => {
+    return mapper => {
       createMap(
         mapper,
         TaskEntity,
         TaskModel,
         forMember(
-          (d) => d.createdAt,
-          mapFrom((s) => (s.createdAt ? s.createdAt.toISOString() : null))
+          d => d.createdAt,
+          mapFrom(s => (s.createdAt ? s.createdAt.toISOString() : null))
         ),
         forMember(
-          (d) => d.updatedAt,
-          mapFrom((s) => (s.updatedAt ? s.updatedAt.toISOString() : null))
+          d => d.updatedAt,
+          mapFrom(s => (s.updatedAt ? s.updatedAt.toISOString() : null))
         )
       );
       createMap(mapper, TaskModel, TaskEntity);

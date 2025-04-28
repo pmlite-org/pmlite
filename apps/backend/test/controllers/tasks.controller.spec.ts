@@ -1,9 +1,9 @@
-import { Test, TestingModule } from "@nestjs/testing";
-import { TasksController } from "../../src/controllers/tasks.controller";
-import { TasksService } from "../../src/services/tasks.service";
-import { TaskModel } from "../../src/models/task.model";
+import { Test, TestingModule } from '@nestjs/testing';
+import { TasksController } from '../../src/controllers/tasks.controller';
+import { TasksService } from '../../src/services/tasks.service';
+import { TaskModel } from '../../src/presentation/models/task.model';
 
-describe("TasksController", () => {
+describe('TasksController', () => {
   let tasksController: TasksController;
   let tasksService: TasksService;
 
@@ -26,35 +26,33 @@ describe("TasksController", () => {
     tasksService = module.get<TasksService>(TasksService);
   });
 
-  it("should be defined", () => {
+  it('should be defined', () => {
     expect(tasksController).toBeDefined();
   });
 
-  describe("find", () => {
-    it("should return an array of tasks", async () => {
+  describe('find', () => {
+    it('should return an array of tasks', async () => {
       const result: TaskModel[] = [];
-      jest.spyOn(tasksService, "find").mockResolvedValue(result);
+      jest.spyOn(tasksService, 'find').mockResolvedValue(result);
 
       expect(await tasksController.find()).toBe(result);
     });
   });
 
-  describe("bulkUpsertTasks", () => {
-    it("should return an array of upserted tasks", async () => {
+  describe('bulkUpsertTasks', () => {
+    it('should return an array of upserted tasks', async () => {
       const result: TaskModel[] = [];
       const bulkUpsertTasksModel: TaskModel[] = [];
-      jest.spyOn(tasksService, "bulkUpsert").mockResolvedValue(result);
+      jest.spyOn(tasksService, 'bulkUpsert').mockResolvedValue(result);
 
-      expect(await tasksController.bulkUpsertTasks(bulkUpsertTasksModel)).toBe(
-        result
-      );
+      expect(await tasksController.bulkUpsertTasks(bulkUpsertTasksModel)).toBe(result);
     });
   });
 
-  describe("bulkDeleteTasks", () => {
-    it("should delete tasks and return void", async () => {
+  describe('bulkDeleteTasks', () => {
+    it('should delete tasks and return void', async () => {
       const uuids: string[] = [];
-      jest.spyOn(tasksService, "bulkDelete").mockResolvedValue();
+      jest.spyOn(tasksService, 'bulkDelete').mockResolvedValue();
 
       expect(await tasksController.bulkDeleteTasks(uuids)).toBeUndefined();
     });

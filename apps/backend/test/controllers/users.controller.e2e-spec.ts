@@ -1,10 +1,10 @@
-import { Test, TestingModule } from "@nestjs/testing";
-import { INestApplication, ValidationPipe } from "@nestjs/common";
-import request from "supertest";
-import { AppModule } from "../../src/config/app.module";
-import { UserModel } from "../../src/models/user.model";
+import { Test, TestingModule } from '@nestjs/testing';
+import { INestApplication, ValidationPipe } from '@nestjs/common';
+import request from 'supertest';
+import { AppModule } from '../../src/config/app.module';
+import { UserModel } from '../../src/presentation/models/user.model';
 
-describe("UsersController (e2e)", () => {
+describe('UsersController (e2e)', () => {
   let app: INestApplication;
 
   beforeAll(async () => {
@@ -21,25 +21,25 @@ describe("UsersController (e2e)", () => {
     await app.close();
   });
 
-  it("/users (GET)", () => {
+  it('/users (GET)', () => {
     return request(app.getHttpServer())
-      .get("/users")
+      .get('/users')
       .expect(200)
-      .expect((res) => {
+      .expect(res => {
         expect(Array.isArray(res.body)).toBe(true);
       });
   });
 
-  it("/users (POST)", () => {
+  it('/users (POST)', () => {
     const newUser: UserModel = {
       id: 1,
-      name: "Test User",
+      name: 'Test User',
     };
     return request(app.getHttpServer())
-      .post("/users")
+      .post('/users')
       .send(newUser)
       .expect(400)
-      .expect((res) => {
+      .expect(res => {
         expect(res.body.message).toBeDefined();
       });
   });
